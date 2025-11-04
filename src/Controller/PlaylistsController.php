@@ -16,6 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PlaylistsController extends AbstractController {
     
+    
+    private const PAGEPLAYLISTS = "pages/playlists.html.twig";
+    
     /**
      * 
      * @var PlaylistRepository
@@ -50,7 +53,7 @@ class PlaylistsController extends AbstractController {
     public function index(): Response{
         $playlists = $this->playlistRepository->findAllOrderByName('ASC');
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/playlists.html.twig", [
+        return $this->render(self::PAGEPLAYLISTS, [
             'playlists' => $playlists,
             'categories' => $categories            
         ]);
@@ -62,9 +65,15 @@ class PlaylistsController extends AbstractController {
             case "name":
                 $playlists = $this->playlistRepository->findAllOrderByName($ordre);
                 break;
+            case "nbformations":
+                $playlists = $this->playlistRepository->findAllOrderByNbFormations($ordre);
+                break;
+            default:
+                $playlists = $this->playlistRepository->findAll();
+                break;
         }
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/playlists.html.twig", [
+        return $this->render(self::PAGEPLAYLISTS, [
             'playlists' => $playlists,
             'categories' => $categories            
         ]);
@@ -75,7 +84,7 @@ class PlaylistsController extends AbstractController {
         $valeur = $request->get("recherche");
         $playlists = $this->playlistRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
-        return $this->render("pages/playlists.html.twig", [
+        return $this->render(self::PAGEPLAYLISTS, [
             'playlists' => $playlists,
             'categories' => $categories,            
             'valeur' => $valeur,
