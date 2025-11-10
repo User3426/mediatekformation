@@ -2,6 +2,7 @@
 
 namespace App\Controller\admin;
 
+use App\Entity\Playlist;
 use App\Form\PlaylistType;
 use App\Repository\CategorieRepository;
 use App\Repository\FormationRepository;
@@ -122,6 +123,23 @@ class AdminPlaylistsController extends AbstractController {
             'playlist' => $playlist,
             'formplaylist' => $formPlaylist->createView(),
             'playlistformations' => $playlist->getFormations()
+        ]);
+    }
+    
+    #[Route('/admin/playlist/ajout}', name: 'admin.playlist.ajout')]
+    public function ajout(Request $request): Response{
+        $playlist = new Playlist();
+        $formPlaylist = $this->createForm(PlaylistType::class, $playlist);
+        
+        $formPlaylist->handleRequest($request);
+        if($formPlaylist->isSubmitted() && $formPlaylist->isValid()){
+            $this->playlistRepository->add($playlist);
+            return $this->redirectToRoute('admin.playlists');
+        }
+        
+        return $this->render("admin/admin.playlist.ajout.html.twig", [
+            'playlist' => $playlist,
+            'formplaylist' => $formPlaylist->createView()
         ]);
     }
 }
