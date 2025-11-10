@@ -1,0 +1,31 @@
+{%  extends "baseadminplaylists.html.twig" %}
+
+{% block body %}
+    <h2>Détails de la playlist</h2>
+
+    <div class="row mt-3">
+        <div class="col-md-6">
+            {{ form_start(formplaylist) }}
+            {{ form_end(formplaylist) }}
+        </div>
+        <div class="col-md-6">
+            <h3>Formations associées</h3>
+            {% if playlistformations|length > 0 %}
+                <div class="list-group">
+                    {% for formation in playlistformations %}
+                        <div class="list-group-item d-flex align-items-center">
+                            {% if formation.miniature %}
+                                <img src="{{ formation.miniature }}" alt="{{ formation.title }}" 
+                                     style="height:50px; margin-right:10px;">
+                            {% endif %}
+                            <span>{{ formation.title }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Aucune formation associée.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

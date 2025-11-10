@@ -2,6 +2,7 @@
 
 namespace App\Controller\admin;
 
+use App\Form\PlaylistType;
 use App\Repository\CategorieRepository;
 use App\Repository\FormationRepository;
 use App\Repository\PlaylistRepository;
@@ -104,5 +105,23 @@ class AdminPlaylistsController extends AbstractController {
         
         $this->playlistRepository->remove($playlist);
         return $this->redirectToRoute('admin.playlists');
+    }
+    
+    #[Route('/admin/playlist/edit/{id}', name: 'admin.playlist.edit')]
+    public function edit(int $id, Request $request): Response{
+        $playlist = $this->playlistRepository->find($id);
+        $formPlaylist = $this->createForm(PlaylistType::class, $playlist);
+        
+        $formPlaylist->handleRequest($request);
+        if($formPlaylist->isSubmitted() && $formPlaylist->isValid()){
+            $this->playlistRepository->add($playlist);
+            return $this->redirectToRoute('admin.playlists');
+        }
+        
+        return $this->render("admin/admin.playlist.edit.html.twig", [
+            'playlist' => $playlist,
+            'formplaylist' => $formPlaylist->createView(),
+            'playlistformations' => $playlist->getFormations()
+        ]);
     }
 }
