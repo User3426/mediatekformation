@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FormationRepository;
+use DateTimeInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -24,7 +26,7 @@ class Formation
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\LessThanOrEqual("now")]
-    private ?\DateTimeInterface $publishedAt = null;
+    private ?DateTimeInterface $publishedAt = null;
 
     #[ORM\Column(length: 100, nullable: false)]
     private ?string $title = null;
@@ -54,12 +56,12 @@ class Formation
         return $this->id;
     }
 
-    public function getPublishedAt(): ?\DateTimeInterface
+    public function getPublishedAt(): ?DateTimeInterface
     {
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(?\DateTimeInterface $publishedAt): static
+    public function setPublishedAt(?DateTimeInterface $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
 
