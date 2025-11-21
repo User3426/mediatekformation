@@ -96,7 +96,7 @@ class AdminFormationsController extends AbstractController{
         ]);
     }
     
-    #[Route('/admin/formation/ajout}', name: 'admin.formation.ajout')]
+    #[Route('/admin/formation/ajout', name: 'admin.formation.ajout')]
     public function ajout(Request $request): Response{
         $formation = new Formation();
         $formFormation = $this->createForm(FormationType::class, $formation);
