@@ -7,8 +7,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/*
+ * Contrôleur de connexion.
+ *
+ * Gère l'affichage du formulaire de login et la déconnexion.
+ */
 class LoginController extends AbstractController
 {
+    /*
+     * Affiche le formulaire de connexion.
+     *
+     * @Route("/login", name="app_login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     */
     #[Route('/login', name: 'app_login')]
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
@@ -22,6 +34,12 @@ class LoginController extends AbstractController
         ]);
     }
     
+    /*
+     * Déconnecte l'utilisateur
+     *
+     * @Route("/logout", name="logout")
+     * @return void
+     */
     #[Route('/logout', name: 'logout')]
     public function logout(){
         

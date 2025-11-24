@@ -13,13 +13,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Description of AdminFormationsController
+ * Contrôleur d'administration des formations.
+ *
+ * Gère l'affichage, le tri, la recherche, la modification et l'ajout des formations.
  *
  * @author Tristan
  */
 class AdminFormationsController extends AbstractController{
     
     
+    /*
+     * chemin du template pour adminformations
+     */
     private const PAGEADMINFORMATIONS = "admin/admin.formations.html.twig";
     
     /**
@@ -34,11 +39,21 @@ class AdminFormationsController extends AbstractController{
      */
     private $categorieRepository;
     
+    /*
+     * @param FormationRepository $formationRepository
+     * @param CategorieRepository $categorieRepository
+     */
     function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository) {
         $this->formationRepository = $formationRepository;
         $this->categorieRepository= $categorieRepository;
     }
     
+    /*
+     * Affiche toutes les formations et catégories.
+     *
+     * @Route("/admin", name="admin.formations")
+     * @return Response
+     */
     #[Route('/admin', name: 'admin.formations')]
     public function index(): Response{
         $formations = $this->formationRepository->findAll();
@@ -49,6 +64,15 @@ class AdminFormationsController extends AbstractController{
         ]);
     }
     
+    /*
+     * Trie les formations selon un champ et un ordre donnés.
+     *
+     * @Route("admin/formations/tri/{champ}/{ordre}/{table}", name="admin.formations.sort")
+     * @param string $champ
+     * @param string $ordre
+     * @param string $table
+     * @return Response
+     */
     #[Route('admin/formations/tri/{champ}/{ordre}/{table}', name: 'admin.formations.sort')]
     public function sort($champ, $ordre, $table=""): Response{
         $formations = $this->formationRepository->findAllOrderBy($champ, $ordre, $table);
@@ -59,6 +83,15 @@ class AdminFormationsController extends AbstractController{
         ]);
     }     
 
+    /*
+     * Recherche des formations contenant une valeur dans un champ donné.
+     *
+     * @Route("admin/formations/recherche/{champ}/{table}", name="admin.formations.findallcontain")
+     * @param string $champ
+     * @param Request $request
+     * @param string $table
+     * @return Response
+     */
     #[Route('admin/formations/recherche/{champ}/{table}', name: 'admin.formations.findallcontain')]
     public function findAllContain($champ, Request $request, $table=""): Response{
         $valeur = $request->get("recherche");
@@ -72,6 +105,13 @@ class AdminFormationsController extends AbstractController{
         ]);
     }
     
+    /*
+     * Supprime une formation.
+     *
+     * @Route("/admin/formation/suppr/{id}", name="admin.formation.suppr")
+     * @param int $id
+     * @return Respons
+     */
     #[Route('/admin/formation/suppr/{id}', name: 'admin.formation.suppr')]
     public function suppr(int $id): Response{
         $formation = $this->formationRepository->find($id);
@@ -79,6 +119,14 @@ class AdminFormationsController extends AbstractController{
         return $this->redirectToRoute('admin.formations');
     }
     
+    /*
+     * Modifie une formation existante.
+     *
+     * @Route("/admin/formation/edit/{id}", name="admin.formation.edit")
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/formation/edit/{id}', name: 'admin.formation.edit')]
     public function edit(int $id, Request $request): Response{
         $formation = $this->formationRepository->find($id);
@@ -96,6 +144,13 @@ class AdminFormationsController extends AbstractController{
         ]);
     }
     
+    /*
+     * Ajoute une nouvelle formation.
+     *
+     * @Route("/admin/formation/ajout", name="admin.formation.ajout")
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/formation/ajout', name: 'admin.formation.ajout')]
     public function ajout(Request $request): Response{
         $formation = new Formation();

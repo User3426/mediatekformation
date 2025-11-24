@@ -7,21 +7,39 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository pour l'entité Playlist.
+ *
+ * Fournit des méthodes pour gérer les playlists, notamment
+ * pour les trier, rechercher par valeur et compter le nombre de formations.
+ * 
  * @extends ServiceEntityRepository<Playlist>
  */
 class PlaylistRepository extends ServiceEntityRepository
 {
+    /*
+     * @param ManagerRegistry $registry Le gestionnaire de persistence Doctrine
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Playlist::class);
     }
 
+    /*
+     * Ajoute une playlist en base de données.
+     *
+     * @param Playlist $entity La playlist à ajouter
+     */
     public function add(Playlist $entity): void
     {
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
     }
 
+    /*
+     * Supprime une playlist de la base de données.
+     *
+     * @param Playlist $entity La playlist à supprimer
+     */
     public function remove(Playlist $entity): void
     {
         $this->getEntityManager()->remove($entity);
@@ -77,6 +95,12 @@ class PlaylistRepository extends ServiceEntityRepository
         }           
     }
     
+    /*
+     * Retourne toutes les playlists triées par nombre de formations.
+     *
+     * @param string $ordre 'ASC' ou 'DESC'
+     * @return Playlist[] Tableau d'objets Playlist
+     */
     public function findAllOrderByNbFormations($ordre): array{
         return $this->createQueryBuilder('p')
                 ->leftjoin('p.formations', 'f')

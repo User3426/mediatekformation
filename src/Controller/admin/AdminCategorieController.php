@@ -10,12 +10,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Description of AdminCategorieController
+ * Contrôleur d'administration des playlists.
+ *
+ * Gère l'affichage, le tri, la recherche et la modification des playlists.
  *
  * @author Tristan
  */
 class AdminCategorieController extends AbstractController {
     
+    /*
+     * chemin du template admincategories
+     */
     private const PAGEADMINCATEGORIES = "admin/admin.categories.html.twig";
     
     /**
@@ -24,10 +29,19 @@ class AdminCategorieController extends AbstractController {
      */
     private $categorieRepository;
     
+    /*
+     * @param CategorieRepository $categorieRepository
+     */
     function __construct(CategorieRepository $categorieRepository) {
         $this->categorieRepository= $categorieRepository;
     }
     
+    /*
+     * Affiche toutes les catégories.
+     *
+     * @Route("/admin/categories", name="admin.categories")
+     * @return Response
+     */
     #[Route('/admin/categories', name: 'admin.categories')]
     public function index(): Response{
         $categories = $this->categorieRepository->findAll();
@@ -36,6 +50,13 @@ class AdminCategorieController extends AbstractController {
         ]);
     }
     
+    /*
+     * Supprime une catégorie si elle n'a pas de formations.
+     *
+     * @Route("/admin/categorie/suppr/{id}", name="admin.categorie.suppr")
+     * @param int $id
+     * @return Response
+     */
     #[Route('/admin/categorie/suppr/{id}', name: 'admin.categorie.suppr')]
     public function suppr(int $id): Response{
         $categorie = $this->categorieRepository->find($id);
@@ -50,6 +71,13 @@ class AdminCategorieController extends AbstractController {
         return $this->redirectToRoute('admin.categories');
     }
     
+    /*
+     * Ajoute une nouvelle catégorie.
+     *
+     * @Route("/admin/categorie/ajout", name="admin.categorie.ajout")
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/admin/categorie/ajout', name: 'admin.categorie.ajout')]
     public function ajout(Request $request): Response{
         $nomCategorie = $request->get("nom");

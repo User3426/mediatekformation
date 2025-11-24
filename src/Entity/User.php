@@ -7,15 +7,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/*
+ * Représente un utilisateur de l'application.
+ *
+ * Cette entité gère l'identifiant, le nom d'utilisateur,
+ * les rôles et le mot de passe chiffré. Elle implémente
+ * UserInterface et PasswordAuthenticatedUserInterface
+ * pour l'intégration au système de sécurité Symfony.
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    /*
+     * Identifiant unique de l'utilisateur.
+     *
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /*
+     * Nom d'utilisateur servant d'identifiant.
+     *
+     * @var string|null
+     */
     #[ORM\Column(length: 180)]
     private ?string $username = null;
 
@@ -36,11 +54,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    /*
+     * Retourne le nom d'utilisateur.
+     *
+     * @return string|null
+     */
     public function getUsername(): ?string
     {
         return $this->username;
     }
 
+    /*
+     * Définit le nom d'utilisateur.
+     *
+     * @param string $username
+     * @return static
+     */
     public function setUsername(string $username): static
     {
         $this->username = $username;
@@ -59,8 +88,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @see UserInterface
+     * Retourne la liste des rôles associés à l'utilisateur.
+     * Ajoute toujours automatiquement ROLE_USER.
      *
+     * @see UserInterface
      * @return list<string>
      */
     public function getRoles(): array
@@ -73,7 +104,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Définit les rôles de l'utilisateur.
+     *
      * @param list<string> $roles
+     * @return static
      */
     public function setRoles(array $roles): static
     {
@@ -83,13 +117,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Retourne le mot de passe chiffré.
+     *
      * @see PasswordAuthenticatedUserInterface
+     * @return string
      */
     public function getPassword(): string
     {
         return $this->password;
     }
 
+    /*
+     * Définit le mot de passe chiffré.
+     *
+     * @param string $password
+     * @return static
+     */
     public function setPassword(string $password): static
     {
         $this->password = $password;
@@ -98,7 +141,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Supprime les données sensibles temporaires.
+     *
      * @see UserInterface
+     * @return void
      */
     public function eraseCredentials(): void
     {

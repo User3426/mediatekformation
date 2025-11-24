@@ -10,6 +10,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/*
+ * Représente une formation vidéo avec un titre, une description,
+ * une date de publication, un identifiant vidéo et ses catégories associées.
+ */
 #[ORM\Entity(repositoryClass: FormationRepository::class)]
 class Formation
 {
@@ -19,48 +23,98 @@ class Formation
      */
     private const CHEMIN_IMAGE = "https://i.ytimg.com/vi/";
         
+    /*
+     * Identifiant unique de la formation
+     * 
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /*
+     * Date de publication de la formation
+     * Doit être antérieur ou égale à la date actuelle
+     */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Assert\LessThanOrEqual("now")]
     private ?DateTimeInterface $publishedAt = null;
 
+    /*
+     * titre de la formation
+     * 
+     * @var string|null
+     */
     #[ORM\Column(length: 100, nullable: false)]
     private ?string $title = null;
 
+    /*
+     * description textuelle de la formation
+     * 
+     * @var string|null
+     */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    /*
+     * Id de la vidéo youtube de la formation
+     * 
+     * @var string|null
+     */
     #[ORM\Column(length: 20, nullable: false)]
     private ?string $videoId = null;
 
+    /*
+     * Playlist associée à la formation
+     * 
+     * @var Playlist|null
+     */
     #[ORM\ManyToOne(inversedBy: 'formations')]
     private ?Playlist $playlist = null;
 
     /**
+     * Liste des catégories auxquelles appartient la formation.
+     * 
      * @var Collection<int, Categorie>
      */
     #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'formations')]
     private Collection $categories;
 
+    /*
+     * Initialise la collection de catégories.
+     */
     public function __construct()
     {
         $this->categories = new ArrayCollection();
     }
 
+    /*
+     * Retourne l'identifiant de la formation.
+     *
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /*
+     *  Retourne la date de publication.
+     *
+     * @return DateTimeInterface|null
+     */
     public function getPublishedAt(): ?DateTimeInterface
     {
         return $this->publishedAt;
     }
 
+    /*
+     * Définit la date de publication.
+     *
+     * @param DateTimeInterface|null $publishedAt
+     * @return static
+     */
     public function setPublishedAt(?DateTimeInterface $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
@@ -68,6 +122,11 @@ class Formation
         return $this;
     }
 
+    /*
+     * Retourne la date de publication au format jj/mm/aaaa.
+     *
+     * @return string
+     */
     public function getPublishedAtString(): string {
         if($this->publishedAt == null){
             return "";
@@ -75,11 +134,22 @@ class Formation
         return $this->publishedAt->format('d/m/Y');     
     }      
     
+    /*
+     * Retourne le titre de la formation.
+     *
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
+    /*
+     * Définit le titre de la formation.
+     *
+     * @param string|null $title
+     * @return static
+     */
     public function setTitle(?string $title): static
     {
         $this->title = $title;
@@ -87,11 +157,22 @@ class Formation
         return $this;
     }
 
+    /*
+     * Retourne la description.
+     *
+     * @return string|null
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    /*
+     * Définit la description.
+     *
+     * @param string|null $description
+     * @return static
+     */
     public function setDescription(?string $description): static
     {
         $this->description = $description;
@@ -99,11 +180,22 @@ class Formation
         return $this;
     }
 
+    /*
+     * Retourne l'identifiant de la vidéo.
+     *
+     * @return string|null
+     */
     public function getVideoId(): ?string
     {
         return $this->videoId;
     }
 
+    /*
+     * Définit l'identifiant de la vidéo
+     * 
+     * @param string|null $videoId
+     * @return static
+     */
     public function setVideoId(?string $videoId): static
     {
         $this->videoId = $videoId;
@@ -111,21 +203,42 @@ class Formation
         return $this;
     }
 
+    /*
+     * Retourne l’URL de la miniature par défaut.
+     *
+     * @return string|null
+     */
     public function getMiniature(): ?string
     {
         return self::CHEMIN_IMAGE.$this->videoId."/default.jpg";
     }
 
+    /*
+     * Retourne l’URL de la miniature haute qualité.
+     *
+     * @return string|null
+     */
     public function getPicture(): ?string
     {
         return self::CHEMIN_IMAGE.$this->videoId."/hqdefault.jpg";
     }
     
+    /*
+     * Retourne la playlist associée.
+     *
+     * @return Playlist|null
+     */
     public function getPlaylist(): ?playlist
     {
         return $this->playlist;
     }
 
+    /*
+     * Associe une playlist à la formation.
+     *
+     * @param Playlist|null $playlist
+     * @return static
+     */
     public function setPlaylist(?Playlist $playlist): static
     {
         $this->playlist = $playlist;
@@ -134,6 +247,8 @@ class Formation
     }
 
     /**
+     * Retourne la collection des catégories.
+     * 
      * @return Collection<int, Categorie>
      */
     public function getCategories(): Collection
@@ -141,6 +256,12 @@ class Formation
         return $this->categories;
     }
 
+    /*
+     * Ajoute une catégorie à la formation.
+     *
+     * @param Categorie $category
+     * @return static
+     */
     public function addCategory(Categorie $category): static
     {
         if (!$this->categories->contains($category)) {
@@ -150,6 +271,12 @@ class Formation
         return $this;
     }
 
+    /*
+     * Retire une catégorie de la formation.
+     *
+     * @param Categorie $category
+     * @return static
+     */
     public function removeCategory(Categorie $category): static
     {
         $this->categories->removeElement($category);
