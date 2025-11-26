@@ -33,7 +33,7 @@ class FormationType extends AbstractType
         $builder
             ->add('publishedAt', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'plubliée le'
+                'label' => 'publiée le'
             ])
             ->add('title')
             ->add('description')
