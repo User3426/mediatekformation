@@ -1,7 +1,7 @@
 # Mediatekformation
 ## Présentation
 Ce projet est une extension de l'application Mediatekformation originale.<br>
-Le dépôt d'origine est accessible ici : [lien_vers_depot_origine]<br>
+Le dépôt d'origine est accessible ici : https://github.com/CNED-SLAM/mediatekformation<br>
 Le README du dépôt d'origine contient la présentation complète de l'application de base (fonctionnalités front office, structure de la base de données, etc.).<br>
 ## Fonctionnalités ajoutées au front office
 Cette version évoluée du site Mediatekformation ajoute un back office complet permettant aux administrateurs de gérer l'ensemble du contenu du site (formations, playlists et catégories). Les fonctionnalités du front office ont également été enrichies.
