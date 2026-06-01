@@ -686,8 +686,9 @@ INSERT INTO `playlist` (`id`, `name`, `description`) VALUES
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(180) NOT NULL,
-  `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
-) ;
+  `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `password` varchar(255) NOT NULL
+);
 
 --
 -- Déchargement des données de la table `user`
